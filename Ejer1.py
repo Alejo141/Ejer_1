@@ -1,6 +1,14 @@
 import streamlit as st
 import pandas as pd
 import os
+from tkinter import Tk, filedialog
+
+# Función para seleccionar carpeta con un cuadro de diálogo
+def seleccionar_carpeta():
+    root = Tk()
+    root.withdraw()  # Oculta la ventana principal de Tkinter
+    carpeta_seleccionada = filedialog.askdirectory()
+    return carpeta_seleccionada
 
 # Función para procesar los archivos Excel
 def procesar_archivos(carpeta_origen, archivo_salida):
@@ -42,10 +50,18 @@ def procesar_archivos(carpeta_origen, archivo_salida):
 # Interfaz de Streamlit
 st.title("Consolidación de Archivos Excel")
 
-carpeta_origen = st.text_input("Ruta de la carpeta de origen:", "H:/Mi unidad/01. ZNI EXPERT/1. EMPRESAS/5. DISPOWER/5. Calculos 026/Cartera Dispower")
+if st.button("Seleccionar Carpeta de Origen"):
+    carpeta_origen = seleccionar_carpeta()
+    if carpeta_origen:
+        st.success(f"Carpeta seleccionada: {carpeta_origen}")
+    else:
+        st.error("No se seleccionó ninguna carpeta.")
+else:
+    carpeta_origen = None
+
 archivo_salida = st.text_input("Ruta del archivo de salida:", "H:/Mi unidad/01. ZNI EXPERT/1. EMPRESAS/5. DISPOWER/5. Calculos 026/Cartera Dispower/conso_cartera.xlsx")
 
-if st.button("Procesar Archivos"):
+if carpeta_origen and st.button("Procesar Archivos"):
     if os.path.exists(carpeta_origen):
         with st.spinner("Procesando archivos..."):
             df_consolidado, archivo_salida_generado = procesar_archivos(carpeta_origen, archivo_salida)
