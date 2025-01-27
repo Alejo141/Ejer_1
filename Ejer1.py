@@ -42,7 +42,7 @@ def procesar_archivos(carpeta_origen, archivo_salida):
 # Interfaz de Streamlit
 st.title("Consolidación de Archivos Excel")
 
-carpeta_origen = st.text_input("Ruta de la carpeta de origen:")
+carpeta_origen = st.file_uploader("Sube tus archivos Excel", accept_multiple_files=True)
 archivo_salida = st.text_input("Ruta del archivo de salida:", "conso_cartera.xlsx")
 
 if st.button("Procesar Archivos"):
