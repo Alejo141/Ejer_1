@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
+from streamlit_folder_picker import st_folder_picker
 
 # Función para procesar los archivos Excel
 def procesar_archivos(carpeta_origen, archivo_salida):
@@ -42,10 +43,13 @@ def procesar_archivos(carpeta_origen, archivo_salida):
 # Interfaz de Streamlit
 st.title("Consolidación de Archivos Excel")
 
-carpeta_origen = st.file_uploader("Sube tus archivos Excel", accept_multiple_files=True)
-archivo_salida = st.file_uploader("Ruta del archivo de salida:", accept_multiple_files=True)
+# Selector de carpeta
+carpeta_origen = st_folder_picker("Selecciona la carpeta de origen", key="carpeta_origen")
 
-if st.button("Procesar Archivos"):
+# Ruta del archivo de salida
+archivo_salida = st.text_input("Ruta del archivo de salida:", "conso_cartera.xlsx")
+
+if carpeta_origen and st.button("Procesar Archivos"):
     if os.path.exists(carpeta_origen):
         with st.spinner("Procesando archivos..."):
             df_consolidado, archivo_salida_generado = procesar_archivos(carpeta_origen, archivo_salida)
