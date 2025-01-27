@@ -1,14 +1,6 @@
 import streamlit as st
 import pandas as pd
 import os
-from tkinter import Tk, filedialog
-
-# Función para seleccionar carpeta con un cuadro de diálogo
-def seleccionar_carpeta():
-    root = Tk()
-    root.withdraw()  # Oculta la ventana principal de Tkinter
-    carpeta_seleccionada = filedialog.askdirectory()
-    return carpeta_seleccionada
 
 # Función para procesar los archivos Excel
 def procesar_archivos(carpeta_origen, archivo_salida):
@@ -19,13 +11,13 @@ def procesar_archivos(carpeta_origen, archivo_salida):
             ruta_archivo = os.path.join(carpeta_origen, archivo)
             try:
                 df = pd.read_excel(ruta_archivo, sheet_name=1)
-                
-                columna_1 = df.iloc[:, 0] # Identificacion
-                columna_2 = df.iloc[:, 2].astype(str).str.replace("-", "") # Factura
-                columna_3 = df.iloc[:, 6] # Centro costos
-                columna_4 = df.iloc[:, 7] # Saldo cartera
-                columna_5 = df.iloc[:, 9] # mes
-                columna_6 = df.iloc[:, 10] # año
+
+                columna_1 = df.iloc[:, 0]  # Identificacion
+                columna_2 = df.iloc[:, 2].astype(str).str.replace("-", "")  # Factura
+                columna_3 = df.iloc[:, 6]  # Centro costos
+                columna_4 = df.iloc[:, 7]  # Saldo cartera
+                columna_5 = df.iloc[:, 9]  # mes
+                columna_6 = df.iloc[:, 10]  # año
 
                 for valor1, valor2, valor3, valor4, valor5, valor6 in zip(columna_1, columna_2, columna_3, columna_4, columna_5, columna_6):
                     datos_consolidados.append({
@@ -50,18 +42,10 @@ def procesar_archivos(carpeta_origen, archivo_salida):
 # Interfaz de Streamlit
 st.title("Consolidación de Archivos Excel")
 
-if st.button("Seleccionar Carpeta de Origen"):
-    carpeta_origen = seleccionar_carpeta()
-    if carpeta_origen:
-        st.success(f"Carpeta seleccionada: {carpeta_origen}")
-    else:
-        st.error("No se seleccionó ninguna carpeta.")
-else:
-    carpeta_origen = None
+carpeta_origen = st.text_input("Ruta de la carpeta de origen:")
+archivo_salida = st.text_input("Ruta del archivo de salida:", "conso_cartera.xlsx")
 
-archivo_salida = st.text_input("Ruta del archivo de salida:", "H:/Mi unidad/01. ZNI EXPERT/1. EMPRESAS/5. DISPOWER/5. Calculos 026/Cartera Dispower/conso_cartera.xlsx")
-
-if carpeta_origen and st.button("Procesar Archivos"):
+if st.button("Procesar Archivos"):
     if os.path.exists(carpeta_origen):
         with st.spinner("Procesando archivos..."):
             df_consolidado, archivo_salida_generado = procesar_archivos(carpeta_origen, archivo_salida)
